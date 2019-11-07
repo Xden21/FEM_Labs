@@ -123,3 +123,19 @@ Surf_Air_Rin = news; Plane Surface(news) = {5};
 Curve Loop(6) = {22, 16, 17, -23, -21, -20};
 //+
 Surf_Air_Rext = news; Plane Surface(news) = {6};
+//+
+Physical Surface("E-core") = {24};
+//+
+Physical Surface("I-core") = {26};
+//+
+Physical Surface("Air") = {28, 25, 27};
+//+
+Physical Surface("Shell") = {29};
+//+
+Physical Curve("E-core boundary") = {4, 9, 3, 8, 5, 7, 1};
+//+
+Physical Curve("I-core boundary") = {10, 13, 11};
+//+
+Physical Curve("Inner shell") = {16, 17};
+//+
+Physical Curve("Outer shell") = {20, 21};
