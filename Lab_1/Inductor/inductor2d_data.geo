@@ -33,6 +33,31 @@ ag = 0.3175*mm; // length air gap
 
 htot = hI + hE + ag; // Total height of inductor
 
+NbWires = 60;
+IA = 5;
+
+Lz = 6.48*mm;
+
 // shell radius
 Rint = 30*mm; // Internal radius
 Rext = 40*mm; // External radius
+
+// Physical groups
+ECORE = 1000;
+ICORE = 1100;
+
+SKINECORE = 1111;
+SKINICORE = 1112;
+
+COIL = 2000;
+SKINCOIL = 2222;
+SKINCORE_COIL = 2122;
+
+AIR = 3000;
+AIRINF = 3100;
+AIRGAP = 3200;
+AIRLAYER = 3300;
+
+SURF_AIROUT = 3333;
+
+AXIS_Y = 10000;

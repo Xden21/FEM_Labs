@@ -77,8 +77,8 @@ lnrin[] += newl; Circle(newl) = {rinpts[0], center, rinpts[2]};
 lnrin[] += newl; Circle(newl) = {rinpts[2], center, rinpts[1]};
 
 // close lines
-lnrin[] += newl; Line(newl) = {rinpts[0], eptop[0]};
-lnrin[] += newl; Line(newl) = {rinpts[1], ipbtm[0]};
+lnrinlines[] += newl; Line(newl) = {rinpts[0], eptop[0]};
+lnrinlines[] += newl; Line(newl) = {rinpts[1], ipbtm[0]};
 
 // Outer Circle
 // Define 3 points
@@ -91,8 +91,8 @@ lnrext[] += newl; Circle(newl) = {rextpts[0], center, rextpts[2]};
 lnrext[] += newl; Circle(newl) = {rextpts[2], center, rextpts[1]};
 
 // close lines
-lnrext[] += newl; Line(newl) = {rextpts[0], rinpts[0]};
-lnrext[] += newl; Line(newl) = {rextpts[1], rinpts[1]};
+lnrextlines[] += newl; Line(newl) = {rextpts[0], rinpts[0]};
+lnrextlines[] += newl; Line(newl) = {rextpts[1], rinpts[1]};
 
 // E Core
 Curve Loop(1) = {6, 4, -9, -3, 8, -5, -7, -1};
@@ -123,19 +123,29 @@ Surf_Air_Rin = news; Plane Surface(news) = {5};
 Curve Loop(6) = {22, 16, 17, -23, -21, -20};
 //+
 Surf_Air_Rext = news; Plane Surface(news) = {6};
+
+// Physical surfaces
 //+
-Physical Surface("E-core") = {24};
+Physical Surface("E-core", ECORE) = Surf_E_Core[];
 //+
-Physical Surface("I-core") = {26};
+Physical Surface("I-core", ICORE) = Surf_I_Core[];
 //+
-Physical Surface("Air") = {28, 25, 27};
+Physical Surface("Coil", COIL) = Surf_Coil[];
+
+Physical Surface("Air", AIR) = {Surf_Air_Rin[],Surf_Air_Gap[]};
+
+Physical Surface("Air Inf", AIRINF) = Surf_Air_Rext[];
+
+Physical Surface("Air Gap", AIRGAP) = Surf_Air_Gap[];
 //+
-Physical Surface("Shell") = {29};
+Physical Curve("E-core Skin", SKINECORE) = {elbtm[0], elbtm[2], eltop[], elvert[1], elvert[2], elvert[3], elcoil[]};
 //+
-Physical Curve("E-core boundary") = {4, 9, 3, 8, 5, 7, 1};
-//+
-Physical Curve("I-core boundary") = {10, 13, 11};
-//+
-Physical Curve("Inner shell") = {16, 17};
-//+
-Physical Curve("Outer shell") = {20, 21};
+Physical Curve("I-core Skin", SKINICORE) = {ilhor[], ilvert[1]};
+
+Physical Curve("Y-Axis", AXIS_Y) = {lnrinlines[], lnrextlines[], elvert[0], ilvert[0], airvert[0]};
+
+Physical Curve("Coil Skin", SKINCOIL) = {elbtm[1], elvert[1], elvert[2], elcoil[]};
+
+Physical Curve("Skin Core and Coil", SKINCORE_COIL) = {elvert[3], elbtm[], eltop[]};
+
+Physical Curve("Outer Edge", SURF_AIROUT) = lnrext[];
