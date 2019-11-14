@@ -7,7 +7,7 @@ SetFactory("OpenCASCADE");
 lc0  = wC/nn_wcore; // Used for core
 lc1  = ag/nn_airgap; // Used for gap
 lc2  = 4*lc1;  // Used for turn at top
-lcri = Pi*Rint/2/nn_ri; // Used for border cirkles
+lcri = Pi*Rint/2/nn_ri; // Used for border circles
 
 // Define center
 center = newp; Point(newp) = {0,0,0,lc0};
