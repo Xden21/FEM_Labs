@@ -40,7 +40,7 @@ Lz = 6.48*mm;
 
 // shell radius
 Rint = 30*mm; // Internal radius
-Rext = 40*mm; // External radius
+Rext = 60*mm; // External radius
 
 // Physical groups
 ECORE = 1000;

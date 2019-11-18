@@ -2,7 +2,7 @@ Include "inductor3d_data.geo";
 
 SetFactory("OpenCASCADE");
 
-Mesh.Optimize = 1;
+Mesh.Optimize =1;
 
 DefineConstant[
   md = { 1.,  Name StrCat[ppm,"0Mesh density"], Highlight Str[colorpp], Closed close_menu},
