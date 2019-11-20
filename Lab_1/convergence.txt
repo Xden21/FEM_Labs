@@ -1,0 +1,5 @@
+
+
+Tree cotree: convergence after 8 iterations with residual 5.67146e-07
+
+Coulomb gauge: convergence after 8 iterations with residual 3.9468e-07
