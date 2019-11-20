@@ -10,27 +10,27 @@ DefineConstant[
 ];
 
 Group {
-  Stator_Core   = Region[{****}]; // Ferromagnetic part of the stator
-  Stator_Air    = Region[{****}]; // Air in the stator
-  Stator_Airgap = Region[{****}]; // Airgap in the stator side
-  Stator_Bnd_MB = Region[{****}]; // Line limiting the airgap on the stator side, i.e. boundary of the moving band
+  Stator_Core   = Region[{STATOR_CORE}]; // Ferromagnetic part of the stator
+  Stator_Air    = Region[{STATOR_SLOT_OPENING}]; // Air in the stator
+  Stator_Airgap = Region[{STATOR_AIRGAP}] // Airgap in the stator side
+  Stator_Bnd_MB = Region[{STATOR_BND_MOVING_BAND}]; // Line limiting the airgap on the stator side, i.e. boundary of the moving band
 
-  Rotor_Core   = Region[{****}]; // Ferromagnetic part of the rotor
+  Rotor_Core   = Region[{ROTOR_CORE}]; // Ferromagnetic part of the rotor
   Rotor_Air    = Region[{****}]; // Air in the rotor
-  Rotor_Airgap = Region[{****}]; // Airgap in the rotor side
-  Rotor_Bnd_MB = Region[{****}]; // Line limiting the airgap on the rotor side, i.e. boundary of the moving band
+  Rotor_Airgap = Region[{ROTOR_AIRGAP}]; // Airgap in the rotor side
+  Rotor_Bnd_MB = Region[{ROTOR_BND_MOVING_BAND}]; // Line limiting the airgap on the rotor side, i.e. boundary of the moving band
 
   MovingBand_PhysicalNb = #MOVING_BAND ; // Fictitious number for moving band, not in the geo file, this region is created and meshed by the FE solver
 
-  Surf_bn0 = Region[{****}] ; // Lines where the boundary condition normal magnetic flux (bn) must be equal to zero
+  Surf_bn0 = Region[{SURF_EXT}] ; // Lines where the boundary condition normal magnetic flux (bn) must be equal to zero
 
-  Stator_CoilSides_P = Region[{****}] ; // Stator Coil regions with Positive current
-  Stator_CoilSides_N = Region[{****}] ; // Stator coil regions with Negative current
+  Stator_CoilSides_P = Region[{STATOR_COILSIDES_P}] ; // Stator Coil regions with Positive current
+  Stator_CoilSides_N = Region[{STATOR_COILSIDES_N}] ; // Stator coil regions with Negative current
   Stator_Winding = Region[ {Stator_CoilSides_P, Stator_CoilSides_N} ] ;
 
   // Rotor conductors
-  Rotor_Slots_P = Region[{****}] ; // Rotor conductors with Positive current
-  Rotor_Slots_N = Region[{****}] ; // Rotor conductors with Negative current
+  Rotor_Slots_P = Region[{ROTOR_SLOTS_P}] ; // Rotor conductors with Positive current
+  Rotor_Slots_N = Region[{ROTOR_SLOTS_N}] ; // Rotor conductors with Negative current
   Rotor_Winding = Region[ {Rotor_Slots_P, Rotor_Slots_N} ];
 
   Stator = Region[{ Stator_Core }] ;
