@@ -10,7 +10,7 @@ DefineConstant[
 ];
 
 Group {
-  Stator_Core   = Region[{****}]; // Ferromagnetic part of the stator
+  Stator_Core   = Region[{STATOR_CORE}]; // Ferromagnetic part of the stator
   Stator_Air    = Region[{****}]; // Air in the stator
   Stator_Airgap = Region[{****}]; // Airgap in the stator side
   Stator_Bnd_MB = Region[{****}]; // Line limiting the airgap on the stator side, i.e. boundary of the moving band
@@ -65,27 +65,30 @@ Group {
 Function {
   // Data for modeling a stranded inductor
   DefineConstant[
-    Ie = { ***, Name "Input/51Ie stator field excitation current", Highlight "AliceBlue" },
-    Ia = { ***, Name "Input/52Ia rotor armature current", Highlight "AliceBlue"}
+    Ie = { 1.7, Name "Input/51Ie stator field excitation current", Highlight "AliceBlue" },
+    Ia = { 90, Name "Input/52Ia rotor armature current", Highlight "AliceBlue"}
   ] ;
   // Note that DefineConstant with Name definition is only used in the GUI, you could as well simply define
   // Ie = ***;
   // Ia = ***;
 
-  Stator_CoilSide_Area[] = *** ; // Area of the cut of one of the stator windings
-  Rotor_Slot_Area[] = *** ;      // Area of one of the rotor conductors
+  Stator_CoilSide_Area[] = SurfaceArea[]{STATOR_ONE_COILSIDE} ; // Area of the cut of one of the stator windings
+  Rotor_Slot_Area[] = SurfaceArea[]{ROTOR_ONE_SLOT} ;      // Area of one of the rotor conductors
 
-  nb_turns_stator_coils     = *** ; // number of turns per stator coil
-  nb_conductors_rotor_slots = *** ; // number of conductors per rotor slot
+  nb_turns_stator_coils     = 1000 ; // number of turns per stator coil
+  nb_conductors_rotor_slots = 12 ; // number of conductors per rotor slot
 
-  Ifac_stator_coils     = *** ; // fraction of Ie flowing in each turn of each field winding coil
-  Ifac_rotor_conductors = *** ; // fraction of Ia flowing in each conductor of each rotor slot
+  Ifac_stator_coils     = 1 ; // fraction of Ie flowing in each turn of each field winding coil
+  Ifac_rotor_conductors = 1/4 ; // fraction of Ia flowing in each conductor of each rotor slot
 
 
   // Imposed current density in the windings
   // Define js[] for source regions in stator and rotor.
-  // Use: js[#{***}] = Vector[***, ***,***];
-
+  // Use: js[#{***}] = Vector[0, 0,***];
+  js[#{ROTOR_SLOTS_P}] = Vector[0,0,Ia*Ifac_rotor_conductors*nb_conductors_rotor_slots/Rotor_Slot_Area[]];
+  js[#{ROTOR_SLOTS_N}] = Vector[0,0,-1*Ia*Ifac_rotor_conductors*nb_conductors_rotor_slots/Rotor_Slot_Area[]];
+  js[#{STATOR_COILSIDES_P}] = Vector[0,0,Ie*Ifac_stator_coils*nb_turns_stator_coils/Stator_CoilSide_Area[]];
+  js[#{STATOR_COILSIDES_N}] = Vector[0,0,-1*Ie*Ifac_stator_coils*nb_turns_stator_coils/Stator_CoilSide_Area[]];
 }
 
 
