@@ -12,11 +12,11 @@ DefineConstant[
 Group {
   Stator_Core   = Region[{STATOR_CORE}]; // Ferromagnetic part of the stator
   Stator_Air    = Region[{STATOR_SLOT_OPENING}]; // Air in the stator
-  Stator_Airgap = Region[{STATOR_AIRGAP}] // Airgap in the stator side
+  Stator_Airgap = Region[{STATOR_AIRGAP}]; // Airgap in the stator side
   Stator_Bnd_MB = Region[{STATOR_BND_MOVING_BAND}]; // Line limiting the airgap on the stator side, i.e. boundary of the moving band
 
   Rotor_Core   = Region[{ROTOR_CORE}]; // Ferromagnetic part of the rotor
-  Rotor_Air    = Region[{****}]; // Air in the rotor
+  Rotor_Air    = Region[{}]; // Air in the rotor
   Rotor_Airgap = Region[{ROTOR_AIRGAP}]; // Airgap in the rotor side
   Rotor_Bnd_MB = Region[{ROTOR_BND_MOVING_BAND}]; // Line limiting the airgap on the rotor side, i.e. boundary of the moving band
 
@@ -66,7 +66,7 @@ Function {
   // Data for modeling a stranded inductor
   DefineConstant[
     Ie = { 1.7, Name "Input/51Ie stator field excitation current", Highlight "AliceBlue" },
-    Ia = { 90, Name "Input/52Ia rotor armature current", Highlight "AliceBlue"}
+    Ia = { 0, Name "Input/52Ia rotor armature current", Highlight "AliceBlue"}
   ] ;
   // Note that DefineConstant with Name definition is only used in the GUI, you could as well simply define
   // Ie = ***;
