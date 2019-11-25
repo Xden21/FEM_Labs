@@ -66,7 +66,7 @@ Function {
   // Data for modeling a stranded inductor
   DefineConstant[
     Ie = { 1.7, Name "Input/51Ie stator field excitation current", Highlight "AliceBlue" },
-    Ia = { 90, Name "Input/52Ia rotor armature current", Highlight "AliceBlue"}
+    Ia = { 0, Name "Input/52Ia rotor armature current", Highlight "AliceBlue"}
   ] ;
   // Note that DefineConstant with Name definition is only used in the GUI, you could as well simply define
   // Ie = ***;
