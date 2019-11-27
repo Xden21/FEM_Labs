@@ -26,15 +26,15 @@ Group {
   AirInCable = Region[{AIR_IN}];
   AirAboveSoil = Region[{AIR_OUT}];
   DefectInXLPE = Region[{DEFECT}];
-  AirEM = Region[{*******}];//air in electromagnetic domain
-  AirTH = Region[{*******}];//air in thermal domain
-  Air   = Region[{*******}];//all air
+  AirEM = Region[{AIR_IN}];//air in electromagnetic domain
+  AirTH = Region[{AIR_OUT,AIR_IN}];//air in thermal domain
+  Air   = Region[{AIR_OUT,AIR_IN}];//all air
 
   SemiconductorIn = Region[ {SEMI_IN} ];
   XLPE = Region[{XLPE}];
   SemiconductorOut = Region[ {SEMI_OUT} ];
   APLSheath = Region[{APL}];
-  Polyethylene = Region[{*******}];
+  Polyethylene = Region[{POLYETHYLENE_SHEATH,POLYETHYLENE_COVER}];
   SteelA = Region[{STEEL_ARMOUR}];
   SteelP =  Region[{STEEL_PIPE}];
   Steel = Region[{STEEL_ARMOUR,STEEL_PIPE}];
@@ -44,8 +44,8 @@ Group {
   Soil  = Region[{SOIL_TH,SOIL_EM}];//all soil
 
   For k In {1:NbWires}
-  Ind~{k} = Region[{(*******)}];//individual conductor
-  Inds   += Region[{(*******)}];//all conductors
+  Ind~{k} = Region[{(WIRE+k-1)}];//individual conductor
+  Inds   += Region[{(WIRE+k-1)}];//all conductors
   EndFor
 
 
@@ -87,35 +87,35 @@ Function {
   eps0 = 8.854187818e-12;
 
   //permeability
-  nu[Region[{*******}]]  = 1./mu0;//non ferromagnetic
-  nu[Region[{*******}]]  = 1./mu0;//non ferromagnetic
-  nu[Region[{*******}]]  = 1./(mu0*mur_steel);//ferromagnetic
+  nu[#{Inds,Soil,Polyethylene,Air}] = 1./mu0;
+  nu[Region[{SEMI_IN,SEMI_OUT,XLPE,APL,DEFECT}]]  = 1./mu0;//non ferromagnetic
+  nu[Steel]  = 1./(mu0*mur_steel);//ferromagnetic
 
   // electrical conductivity [S/m]
-  sigma[*******]  = sigma_steel;
-  sigma[*******]  = sigma_polyethylene;
-  sigma[Region[{*******}] ] = sigma_semiconductor;
-  sigma[*******] = sigma_xlpe;
-  sigma[*******] = sigma_soil;
-  sigma[*******] = 0.;//air
+  sigma[Steel]  = sigma_steel;
+  sigma[Polyethylene]  = sigma_polyethylene;
+  sigma[Region[{SEMI_IN,SEMI_OUT}] ] = sigma_semiconductor;
+  sigma[XLPE] = sigma_xlpe;
+  sigma[Soil] = sigma_soil;
+  sigma[#{Air,DefectInXLPE}] = 0.;//air
 
   //resistivity of conductor at temperature $1
-  fT_cu[] = *******; // $1 is current temperature in [K], alpha in [1/K]
-  fT_al[] = *******;
+  fT_cu[] = (1+alpha_cu*($1-Tref)); // $1 is current temperature in [K], alpha in [1/K]
+  fT_al[] = (1+alpha_al*($1-Tref));
 
   If (!Flag_sigma_funcT)
-    sigma[*******]      = *******;//linear
-    sigma[*******] = *******;
+    sigma[Inds]      = sigma_cu;//non linear
+    sigma[APLSheath] = sigma_al;
   Else
     sigma[Inds]      = sigma_cu/fT_cu[$1];//non linear
     sigma[APLSheath] = sigma_al/fT_al[$1];
   EndIf
 
 // relative permittivity
-  epsilon[Region[{*******}]] = eps0;
-  epsilon[Region[{*******}]] = eps0*epsr_polyethylene;
-  epsilon[Region[{*******}]] = eps0*epsr_semiconductor;
-  epsilon[Region[{*******}]] = eps0*epsr_xlpe;
+  epsilon[#{Air,Inds,Steel,Soil,APLSheath}] = eps0;
+  epsilon[Polyethylene] = eps0*epsr_polyethylene;
+  epsilon[Region[{SEMI_IN,SEMI_OUT}]] = eps0*epsr_semiconductor;
+  epsilon[Region[{XLPE}]] = eps0*epsr_xlpe;
 
   Freq = 50;
   Omega = 2*Pi*Freq;
@@ -123,8 +123,8 @@ Function {
   Pa = 0.; Pb = -120./180.*Pi; Pc = -240./180.*Pi;
   I = 406; // maximum value current in data sheet
   js0[Ind_1] = Vector[0,0,1] * I / SurfaceArea[] * F_Cos_wt_p[]{Omega, Pa};
-  js0[Ind_2] = *******;
-  js0[Ind_3] = *******;
+  js0[Ind_2] = Vector[0,0,1] * I / SurfaceArea[] * F_Cos_wt_p[]{Omega, Pb};
+  js0[Ind_3] = Vector[0,0,1] * I / SurfaceArea[] * F_Cos_wt_p[]{Omega, Pc};
 
   Ns[]= 1;
   Sc[]= SurfaceArea[];
@@ -138,14 +138,14 @@ Function {
 
 
   // thermal conductivities [W/(m K)]
-  k[*******] = kappa_steel;
-  k[*******]  = kappa_al;
-  k[*******]  = kappa_polyethylene;
-  k[Region[{*******}] ] = kappa_semiconductor;
-  k[*******] = kappa_xlpe;
-  k[*******] = kappa_soil;
-  k[*******] = kappa_cu;
-  k[*******]  = kappa_air;
+  k[Steel] = kappa_steel;
+  k[APLSheath]  = kappa_al;
+  k[Polyethylene]  = kappa_polyethylene;
+  k[Region[{SEMI_IN,SEMI_OUT}] ] = kappa_semiconductor;
+  k[XLPE] = kappa_xlpe;
+  k[Soil] = kappa_soil;
+  k[Inds] = kappa_cu;
+  k[Air]  = kappa_air;
   // * heat conduction mechanism is the main heat transfer mechanism for an underground cable system
   // * all materials have constant thermal properties, including the thermal resistivity of the soil
   // * radiation and convection are not considered
@@ -160,8 +160,8 @@ Constraint {
   { Name ElectricScalarPotential;
     Case {
     { Region Ind_1; Value V0; TimeFunction F_Cos_wt_p[]{2*Pi*Freq, Pa}; }
-    { Region Ind_2; ******* }
-    { Region Ind_3; ******* }
+    { Region Ind_2; Value V0; TimeFunction F_Cos_wt_p[]{2*Pi*Freq, Pb}; }
+    { Region Ind_3; Value V0; TimeFunction F_Cos_wt_p[]{2*Pi*Freq, Pc}; }
 
     { ******* }
     }
@@ -189,8 +189,8 @@ Constraint {
     Case {
       // constraint used if Inds in DomainS_Mag
       { Region Ind_1; Value I; TimeFunction F_Cos_wt_p[]{2*Pi*Freq, Pa}; }
-      { ******* }
-      { ******* }
+      { Region Ind_2; Value I; TimeFunction F_Cos_wt_p[]{2*Pi*Freq, Pb}; }
+      { Region Ind_3; Value I; TimeFunction F_Cos_wt_p[]{2*Pi*Freq, Pc}; }
     }
   }
 /////////////////////////////// End of lab 3 (except Joule losses) ////////////////
