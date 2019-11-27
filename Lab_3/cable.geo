@@ -214,3 +214,5 @@ Color Blue {Surface{sur_al()} ;}
 Color Green {Surface{sur_xlpe()} ;}
 Color Pink {Surface{sur_semi_in(),sur_semi_out()} ;}
 Color Red {Surface{sur_wire()} ;}
+//+
+Show "*";

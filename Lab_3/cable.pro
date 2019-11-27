@@ -23,25 +23,25 @@ DefineConstant[
 
 Group {
   /////////////////////////////// Start of lab 3 ////////////////////////////////////
-  AirInCable = Region[{*******}];
-  AirAboveSoil = Region[{*******}];
-  DefectInXLPE = Region[{*******}];
+  AirInCable = Region[{AIR_IN}];
+  AirAboveSoil = Region[{AIR_OUT}];
+  DefectInXLPE = Region[{DEFECT}];
   AirEM = Region[{*******}];//air in electromagnetic domain
   AirTH = Region[{*******}];//air in thermal domain
   Air   = Region[{*******}];//all air
 
-  SemiconductorIn = Region[ {*******} ];
-  XLPE = Region[{*******}];
-  SemiconductorOut = Region[ {*******} ];
-  APLSheath = Region[{*******}];
+  SemiconductorIn = Region[ {SEMI_IN} ];
+  XLPE = Region[{XLPE}];
+  SemiconductorOut = Region[ {SEMI_OUT} ];
+  APLSheath = Region[{APL}];
   Polyethylene = Region[{*******}];
-  SteelA = Region[{*******}];
-  SteelP =  Region[{*******}];
-  Steel = Region[{*******}];
+  SteelA = Region[{STEEL_ARMOUR}];
+  SteelP =  Region[{STEEL_PIPE}];
+  Steel = Region[{STEEL_ARMOUR,STEEL_PIPE}];
 
-  SoilEM = Region[{*******}];//soil in electro-magnetic domain
-  SoilTH = Region[{*******}];//soil in thermal domain
-  Soil  = Region[{*******}];//all soil
+  SoilEM = Region[{SOIL_EM}];//soil in electro-magnetic domain
+  SoilTH = Region[{SOIL_TH}];//soil in thermal domain
+  Soil  = Region[{SOIL_TH,SOIL_EM}];//all soil
 
   For k In {1:NbWires}
   Ind~{k} = Region[{(*******)}];//individual conductor
