@@ -163,7 +163,7 @@ Constraint {
     { Region Ind_2; Value V0; TimeFunction F_Cos_wt_p[]{2*Pi*Freq, Pb}; }
     { Region Ind_3; Value V0; TimeFunction F_Cos_wt_p[]{2*Pi*Freq, Pc}; }
 
-    { ******* }
+    { Region Sur_Dirichlet_Ele; Value 0;  }
     }
   }
   { Name ZeroElectricScalarPotential; // Only if second order
@@ -178,7 +178,7 @@ Constraint {
   // Magnetic constraints
   { Name MagneticVectorPotential_2D;
     Case {
-      { ******* }
+      { Region Sur_Dirichlet_Mag; Value 0; }
     }
   }
   { Name Voltage_2D;

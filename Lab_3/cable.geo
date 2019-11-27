@@ -119,8 +119,9 @@ sur_ps_exact() = BooleanFragments{Surface{sur_ps2(),sur_ps}; Delete; }{ };
 If(Flag_defect_in_XLPE)
 //Hint: use BooleanDifference
   sur_defect = news;
-  Disk(news) = *******; // ti insulation thickness removed
-  sur_xlpe(2)= *******;
+  Disk(news) = {x2+dc/2+ti+dd+ddefect/2,y2,0, ddefect/2}; // ti insulation thickness removed => circle
+  sur_xlpe_phase2=news; BooleanDifference(news) = {Surface{sur_xlpe(2)}; Delete;}{Surface{sur_defect};};
+  sur_xlpe(2)= sur_xlpe_phase2;
 EndIf
 /////////////////////////////////////////////////////////////////////////////////////////
 
