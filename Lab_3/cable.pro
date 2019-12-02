@@ -711,7 +711,7 @@ PostOperation{
         Units "Ω/km", File "res/Rinds.dat" ];
       Print[ mL_per_km, OnRegion Ind_1, Format Table,
         SendToServer StrCat[po2,"1L"],
-        Units "mL/km", File "res/Linds.dat" ];
+        Units "mH/km", File "res/Linds.dat" ];
 
     }
   }

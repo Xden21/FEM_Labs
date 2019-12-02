@@ -92,8 +92,8 @@ sur_semi_out() = {10,11,12};
 sur_al() = {13,14,15};
 sur_ps = 17;
 sur_steel_armour=18;
-sur_air() = {20,16};
-sur_steel_pipe=21;
+sur_air() = {21,16};
+sur_steel_pipe=20;
 sur_pc = 19;
 
 
