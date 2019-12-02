@@ -1,0 +1,6 @@
+View[PostProcessing.NbViews-1].Type = 4;
+View[PostProcessing.NbViews-1].Axes = 3;
+View[PostProcessing.NbViews-1].AutoPosition = 3;
+View[PostProcessing.NbViews-1].ShowTime = 0;
+View[PostProcessing.NbViews-1].LineWidth = 3;
+View[PostProcessing.NbViews-1].NbIso = 5;

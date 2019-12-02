@@ -112,7 +112,7 @@ Function {
   EndIf
 
 // relative permittivity
-  epsilon[#{Air,Inds,Steel,Soil,APLSheath}] = eps0;
+  epsilon[#{Air,Inds,Steel,Soil,APLSheath,DefectInXLPE}] = eps0;
   epsilon[Polyethylene] = eps0*epsr_polyethylene;
   epsilon[Region[{SEMI_IN,SEMI_OUT}]] = eps0*epsr_semiconductor;
   epsilon[Region[{XLPE}]] = eps0*epsr_xlpe;
