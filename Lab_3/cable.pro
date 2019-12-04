@@ -27,7 +27,7 @@ Group {
   AirAboveSoil = Region[{AIR_OUT}];
   DefectInXLPE = Region[{DEFECT}];
   AirEM = Region[{AIR_IN}];//air in electromagnetic domain
-  AirTH = Region[{AIR_OUT,AIR_IN}];//air in thermal domain
+  AirTH = Region[{AIR_OUT}];//air in thermal domain
   Air   = Region[{AIR_OUT,AIR_IN}];//all air
 
   SemiconductorIn = Region[ {SEMI_IN} ];
@@ -198,11 +198,11 @@ Constraint {
 
   //////////// Lab 4 thermal ///////////
     // Thermal constraints
-  /* { Name DirichletTemp ;
+   { Name DirichletTemp ;
     Case {
-      { Type Assign; Region Sur_Dirichlet_Thermal ; *************; }
+      { Type Assign; Region Sur_Dirichlet_Thermal ; Value Tamb; }
     }
-  }*/
+  }
 
 }
 
@@ -304,9 +304,9 @@ FunctionSpace {
         Support Domain_Thermal; Entity NodesOf[All]; }
     }
     Constraint {
-    /*Uncomment for thermal
+
       { NameOfCoef t; EntityType NodesOf ; NameOfConstraint DirichletTemp; }
-*/    }
+   }
   }
 
 
@@ -379,23 +379,23 @@ Formulation {
 	In Vol_Thermal; Integration I1; Jacobian Vol;  }
 
   //Uncomment for thermal problem
-/*
+
       // Thermal source = Joule losses from EM computation
       // Use <a> when mixing frequency domain and time domain computations
       // {a} is complex, losses are computed taking that into account
-      Galerkin { [ ************ ];
-        In Vol_QSource_Thermal; Integration I1; Jacobian Vol;  }
-      Galerkin { [ ************ ];
-        In Vol_QSource0_Thermal; Integration I1; Jacobian Vol;  }
-      Galerkin { [ ************ ];
-        In Vol_QSourceB_Thermal; Integration I1; Jacobian Vol;  }
+    Galerkin { [ -0.5*sigma[{T}]*<a>[SquNorm[Dt[{a}]]], {T}] ;
+      In Vol_QSource_Thermal; Integration I1; Jacobian Vol;  }
+    /*Galerkin { [ -0.5/sigma[{T}]*<js0[]>[SquNorm[js0[]]], {T} ];
+      In Vol_QSource0_Thermal; Integration I1; Jacobian Vol;  }*/
+    Galerkin { [ -0.5/sigma[{T}]*<ir>[SquNorm[Ns[]/Sc[]*{ir}]], {T} ];
+      In Vol_QSourceB_Thermal; Integration I1; Jacobian Vol;  }
 
-      // Convection boundary condition
-      Galerkin { [ ************* ] ;
-	In Sur_Convection_Thermal; Jacobian Sur ; Integration I1 ; }
-      Galerkin { [ ************* ] ;
-        In Sur_Convection_Thermal ; Jacobian Sur ; Integration I1 ; }
-*/    }
+    // Convection boundary condition
+    /*Galerkin { [  0] ;
+      In Sur_Convection_Thermal; Jacobian Sur ; Integration I1 ; }
+    Galerkin { [ 0] ;
+      In Sur_Convection_Thermal ; Jacobian Sur ; Integration I1 ; }
+    */}
   }
 /////////////////////////////////////////////
 
@@ -434,25 +434,25 @@ Resolution {
 
       If(Flag_AnalysisType > 1) // Magneto-thermal -- linear or NON linear
       //Uncomment for thermal problem
-      /*
-    /*    InitSolution[Sys_Mag];
-        **************
+
+       InitSolution[Sys_Mag];
+       InitSolution[Sys_The];
 
         If(!Flag_sigma_funcT)
           Generate[Sys_Mag]; Solve[Sys_Mag];
-          ****************
+          Generate[Sys_The]; Solve[Sys_The];
         Else
           IterativeLoop[ nb_iter, stop_criterion, relaxation_factor]{
             GenerateJac[Sys_Mag]; SolveJac[Sys_Mag];
-            ****************
+            GenerateJac[Sys_The]; SolveJac[Sys_The];
           }
         EndIf
         SaveSolution[Sys_Mag];
-        *****************
+        SaveSolution[Sys_The];
 
         PostOperation[Mag_Maps];
         PostOperation[Mag_Global];
-        PostOperation[The_Maps];*/
+        PostOperation[The_Maps];
       EndIf
 
     }
@@ -509,11 +509,11 @@ PostProcessing {
       { Name bm; Value { Term { [ Norm[{d a}] ]; In Domain_Mag; Jacobian Vol; } } }
 
       //Uncomment for thermal problem
-      /*
+
       { Name j; Value { Term { [ -sigma[{T}]*Dt[{a}] ]; In DomainC_Mag; Jacobian Vol; } } }
       { Name jz; Value { Term { [ CompZ[-sigma[{T}]*Dt[{a}]] ]; In DomainC_Mag; Jacobian Vol; } } }
       { Name jm; Value { Term { [ Norm[-sigma[{T}]*Dt[{a}]] ]; In DomainC_Mag; Jacobian Vol; } } }
-*/
+
 
       { Name d; Value { Term { [ epsilon[] * Dt[Dt[{a}]] ]; In DomainC_Mag; Jacobian Vol; } } }
       { Name dz; Value { Term { [ CompZ[epsilon[] *  Dt[Dt[{a}]] ] ]; In DomainC_Mag; Jacobian Vol; } } }
@@ -566,14 +566,13 @@ PostProcessing {
   }
 
   //Uncomment for thermal problem
-    /*  { Name ThermalSta; NameOfFormulation ThermalSta; //NameOfSystem T;
+    { Name ThermalSta; NameOfFormulation ThermalSta; //NameOfSystem T;
     Quantity {
       { Name T; Value{ Local{ [ {T} ] ; In Vol_Thermal; Jacobian Vol; } } }
       { Name TinC; Value{ Local{ [ {T}-273.15 ] ; In Vol_Thermal; Jacobian Vol; } } }
       { Name q; Value{ Local{ [ -k[]*{d T} ] ; In Vol_Thermal; Jacobian Vol; } } }
     }
   }
-*/
 }
 
 PostOperation{
@@ -658,7 +657,7 @@ PostOperation{
         ], File "res/maps.opt"];
 
         //Uncomment for thermal problem
-        /*
+
       Print[ jm , OnElementsOf APLSheath ,
         Name "|j| [A/m^2] Al sheath", File "res/jm_al.pos" ];
       Echo[Str["View[PostProcessing.NbViews-1].RangeType = 3;" ,// per timestep
@@ -678,7 +677,7 @@ PostOperation{
           "View[PostProcessing.NbViews-1].ShowTime = 0;",
           "View[PostProcessing.NbViews-1].IntervalsType = 2;"
         ], File "res/maps.opt"];
-*/
+
 
 
       Print[ dm , OnElementsOf DomainC_Mag,
@@ -711,13 +710,13 @@ PostOperation{
         Units "Ω/km", File "res/Rinds.dat" ];
       Print[ mL_per_km, OnRegion Ind_1, Format Table,
         SendToServer StrCat[po2,"1L"],
-        Units "mH/km", File "res/Linds.dat" ];
+        Units "m/km", File "res/Linds.dat" ];
 
     }
   }
 
   //Uncomment for thermal problem
-  /*
+
   // Thermal
   // -------------------------------
   { Name The_Maps; NameOfPostProcessing ThermalSta;
@@ -738,6 +737,6 @@ PostOperation{
                "View[PostProcessing.NbViews-1].ColormapNumber = 6;"
         ], File "res/maps.opt"];
     }
-  }*/
+  }
 
 }
